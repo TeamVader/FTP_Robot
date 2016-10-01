@@ -17,7 +17,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using System.Xml;
 
-namespace ModelViewer
+namespace StaubliEasyFTPClient
 {
     /// <summary>
     /// Interaction logic for Window1.

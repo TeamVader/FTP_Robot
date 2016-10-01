@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace ModelViewer
+namespace StaubliEasyFTPClient
 {
     public interface IFileDialogService
     {

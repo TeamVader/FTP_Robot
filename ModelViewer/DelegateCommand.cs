@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace ModelViewer
+namespace StaubliEasyFTPClient
 {
     using System;
     using System.Windows.Input;
