@@ -5,10 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace StaubliEasyFTPClient
 {
-    class FTP
+    public class FTP
     {
     private string host = null;
     private string user = null;
@@ -21,13 +23,45 @@ namespace StaubliEasyFTPClient
     /* Construct Object */
     public FTP(string hostIP, string userName, string password) { host = hostIP; user = userName; pass = password; }
 
+    public bool check_ftp_connection()
+    {
+        /* Create an FTP Request */
+        ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host + "/");
+        // output.Items.Add(ftpRequest.);
+        /* Log in to the FTP Server with the User Name and Password Provided */
+        ftpRequest.Credentials = new NetworkCredential(user, pass);
+        ftpRequest.UseBinary = true;
+        ftpRequest.UsePassive = true;
+        ftpRequest.KeepAlive = true;
+        ftpRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+        try
+        {
+            WebResponse response = ftpRequest.GetResponse();
+            //set your flag 
+            response.Close();
+            ftpRequest = null;
+            return true;
+        }
+        catch(WebException ex)
+        {
+          //  MessageBox.Show(ex.Message + ex.StackTrace);
+            
+            ftpRequest = null;
+            return false;
+        }
+
+       
+       
+    }
+
     /* Download File */
-    public void download(string remoteFile, string localFile)
+    public void download(string remoteFile, string localFile, ListView output)
     {
         try
         {
             /* Create an FTP Request */
             ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host + "/" + remoteFile);
+           // output.Items.Add(ftpRequest.);
             /* Log in to the FTP Server with the User Name and Password Provided */
             ftpRequest.Credentials = new NetworkCredential(user, pass);
             /* When in doubt, use these options */
@@ -38,6 +72,7 @@ namespace StaubliEasyFTPClient
             ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
             /* Establish Return Communication with the FTP Server */
             ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+            output.Items.Add(WebRequestMethods.Ftp.DownloadFile.ToString());
             /* Get the FTP Server's Response Stream */
             ftpStream = ftpResponse.GetResponseStream();
             /* Open a File Stream to Write the Downloaded File */
@@ -66,12 +101,13 @@ namespace StaubliEasyFTPClient
     }
 
     /* Upload File */
-    public void upload(string remoteFile, string localFile)
+    public void upload(string remoteFile, string localFile, ListView output)
     {
         try
         {
             /* Create an FTP Request */
             ftpRequest = (FtpWebRequest)FtpWebRequest.Create(host + "/" + remoteFile);
+            output.Items.Add(ftpRequest.ToString());
             /* Log in to the FTP Server with the User Name and Password Provided */
             ftpRequest.Credentials = new NetworkCredential(user, pass);
             /* When in doubt, use these options */

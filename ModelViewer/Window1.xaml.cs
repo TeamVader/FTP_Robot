@@ -30,7 +30,7 @@ namespace StaubliEasyFTPClient
        
         public string ip_ftp ;
         public bool connected;
-    
+        public FTP ftpClient;
       
 
 
@@ -51,11 +51,11 @@ namespace StaubliEasyFTPClient
 
            
             connected = false;
-            ip_ftp = "127.0.0.1";
+            
             Main_Grid.DataContext = this;
-
+           // ip_ftp = "127.0.0.1";
             /* Create Object Instance */
-            FTP ftpClient = new FTP(@"ftp://"+ip_ftp+@"/", "alex", "alex");
+            
 
             /* Upload a File */
           //  ftpClient.upload("test.txt", @"C:\Users\alex\Desktop\test.txt");
@@ -68,8 +68,7 @@ namespace StaubliEasyFTPClient
            //  ftpClient.delete("/test.txt");
 
             
-             treeviewtest.Items.Clear();
-             treeviewtest.Items.Add(CreateDirectoryNode(@"ftp://" + ip_ftp + @"/", "root"));
+            
             /* Rename a File */
            // ftpClient.rename("etc/test.txt", "test2.txt");
 
@@ -92,8 +91,8 @@ namespace StaubliEasyFTPClient
             //string[] detailDirectoryListing = ftpClient.directoryListDetailed("/etc");
             //for (int i = 0; i < detailDirectoryListing.Count(); i++) { Console.WriteLine(detailDirectoryListing[i]); }
             /* Release Resources */
-            open_xml_from_ftp(@"usr/usrapp/GRASS_4_Vision/GRASS_4_Vision.dtx",ftpClient);
-            ftpClient = null;
+           
+           // ftpClient = null;
             
 
         }
@@ -155,21 +154,36 @@ namespace StaubliEasyFTPClient
             try
             {
             ip_ftp = IPControl.Text;
-            ConsoleOutput.Items.Add("Try to Connect to IP : " + ip_ftp + " Port 502 " + DateTime.Now);
-            //modbusClient = new ModbusClient(ip_modbus, 502);
-          //  modbusClient.Connect();
-            this.TextConnection.Text = "Connected to Server";
-            this.Connected.BorderBrush = Brushes.Green;
-            ConsoleOutput.Items.Add("Connected succesfull to IP : " + ip_ftp + " Port 502 ");
-            connected = true;
 
+            ConsoleOutput.Items.Add(@"Connect to : ftp://" + ip_ftp + " usr : " + textboxusr.Text + " pwd : " + textboxpwd.Text +DateTime.Now);
+
+           
+            ftpClient = new FTP(@"ftp://" + ip_ftp + @"/", textboxusr.Text,textboxpwd.Text);
+            connected = ftpClient.check_ftp_connection();
+            if (connected)
+            {
+                treeviewtest.Items.Clear();
+                treeviewtest.Items.Add(CreateDirectoryNode(@"ftp://" + ip_ftp + @"/", "root"));
+                open_xml_from_ftp(@"usr/usrapp/GRASS_4_Vision/GRASS_4_Vision.dtx", ftpClient);
+
+                //modbusClient = new ModbusClient(ip_modbus, 502);
+                //  modbusClient.Connect();
+                this.TextConnection.Text = "Connected to Server";
+                this.Connected.BorderBrush = Brushes.Green;
+                ConsoleOutput.Items.Add("Connected succesfull to IP : " + ip_ftp + " ");
+                connected = true;
+            }
+            else
+            {
+                this.TextConnection.Text = "Connection failed";
+                this.Connected.BorderBrush = Brushes.Red;
+               // connected = false;
+            }
                 
               }
             catch (Exception ex)
             {
-                this.TextConnection.Text = "Connection Refused to Server";
-                this.Connected.BorderBrush = Brushes.Red;
-                connected = false;
+               
                 //MessageBox.Show(ex.StackTrace);
             }
         }
@@ -322,28 +336,28 @@ namespace StaubliEasyFTPClient
             try
             {
                 string path = @"C:\Users\alex\m\GRASS_4_Vision.dtx";
-                ftpclient.download(filename, path);
+                ftpclient.download(filename, path, ConsoleOutput);
                 XmlDocument xml = new XmlDocument();
+                string link = "";
                 xml.Load(path);
                 XmlNodeList xnList = xml.SelectNodes("//*[local-name()='Datas']/*[local-name()='Data']");
                 List<Staubli_IO> io_list = new List<Staubli_IO>();
                 foreach (XmlNode xn in xnList)
                 {
-                   
-                        
-                      //  MessageBox.Show(xn.Name);
-                        //  string id = anode["ID"].InnerText;
-                        //   string date = anode["Date"].InnerText;
-                      
-                            // XmlNode example = node.SelectSingleNode("Example");
-                            // if (example != null)
-                            // {
-                            //     string na = example["Name"].InnerText;
-                            //    string no = example["NO"].InnerText;
-                            //}
-                           // MessageBox.Show(xn.Attributes["type"].InnerText);
-                            io_list.Add(new Staubli_IO(xn.Attributes["name"].InnerText,xn.Attributes["type"].InnerText,"",xn.Attributes["access"].InnerText));
-                   
+                    
+                    foreach (XmlNode xnchild in xn.ChildNodes)
+                    {
+                        if (xnchild.Attributes["link"] != null)
+                        {
+                            link = xnchild.Attributes["link"].InnerText;
+                        }
+                        else
+                        {
+                            link = "";
+                        }
+                    }
+                    io_list.Add(new Staubli_IO(xn.Attributes["name"].InnerText, xn.Attributes["type"].InnerText, link, xn.Attributes["access"].InnerText));
+                       
                 }
 
                 this.Datagridio.ItemsSource = io_list;

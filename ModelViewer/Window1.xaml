@@ -8,25 +8,30 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="70" />
             <RowDefinition Height="*" />
 
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
                 <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
+                <ColumnDefinition Width="120"></ColumnDefinition>
+                <ColumnDefinition Width="350"></ColumnDefinition>
+                <ColumnDefinition Width="180"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label VerticalContentAlignment="Top" Grid.Column="0" Grid.Row="0" x:Name="Label_Title" Foreground="White" FontSize="12" Content="ROBOTIC SIMULATION" />
-            <StaubliEasyFTPClient:IPControl x:Name="IPControl" Grid.Row="0" Grid.Column="2" Width="200" Foreground="White" Height="20" Background="Transparent" ></StaubliEasyFTPClient:IPControl>
+            <Label VerticalContentAlignment="Top" Grid.Column="0" Grid.Row="0" x:Name="Label_Title" Foreground="White" FontSize="22" Content="Stäubli Easy FTP Client" />
+            <StaubliEasyFTPClient:IPControl x:Name="IPControl" Grid.Row="0" VerticalAlignment="Top" Grid.Column="2" Width="200" Foreground="White" Height="20" Background="Transparent" ></StaubliEasyFTPClient:IPControl>
+            <TextBox x:Name="textboxusr" Text="maintenance" Grid.Row="0" VerticalAlignment="Center" Grid.Column="2" Width="200" Foreground="White" Height="20" Background="Transparent" ></TextBox>
+            <TextBox x:Name="textboxpwd" Text="spec_cal" Grid.Row="0" VerticalAlignment="Bottom" Grid.Column="2" Width="200" Foreground="White" Height="20" Background="Transparent" ></TextBox>
             <Button x:Name="buttonconnect" Grid.Column="3"  Content="Connect" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="100"  OpacityMask="{x:Null}" Opacity="0.8"  Style="{StaticResource Bluebutton}" FontWeight="Normal" FontFamily="SansSerif" Foreground="#FFFCFCFC"  Height="18" Grid.Row="0" Click="buttonconnect_Click"/>
-            <Label Grid.Column="1" Content="IP Adress" HorizontalAlignment="Left"  VerticalAlignment="Center" Foreground="White" Width="80"></Label>
-            <Border x:Name="Connected"  BorderThickness="1" CornerRadius="4" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Height="20"  Grid.Row="0"  Grid.Column="4">
+            <Label Grid.Column="1" Content="IP Adress" HorizontalAlignment="Left"  VerticalAlignment="Top" Foreground="White" Width="80"></Label>
+            <Label Grid.Column="1" Content="User" HorizontalAlignment="Left"  VerticalAlignment="Center" Foreground="White" Width="80"></Label>
+            <Label Grid.Column="1" Content="Password" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Foreground="White" Width="80"></Label>
+            <ListView x:Name="ConsoleOutput"  BorderBrush="Transparent"  Opacity="0.8" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" Grid.Row="0" Grid.Column="4" Foreground="White" FontFamily="Segoe UI Light"></ListView>
+            <Border x:Name="Connected"  BorderThickness="1" CornerRadius="4" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Height="20"  Grid.Row="0"  Grid.Column="5">
                 <Border.Style>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="BorderBrush"  Value="Red">
@@ -36,10 +41,11 @@
                     </Style>
 
                 </Border.Style>
-                <TextBlock x:Name="TextConnection" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,1.2,37.6,0.4" >
+                <TextBlock x:Name="TextConnection" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,0
+                           ,31.4,0 "  >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Text" Value="No Recording"></Setter>
+                            <Setter Property="Text" Value="No Connection"></Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Recording}" Value="True">
                                     <Setter Property="Text" Value="Active Recording"/>
@@ -90,7 +96,7 @@
 
 
         <Grid x:Name="Main_Grid" Grid.Row="1" Background="Transparent">
-            <TreeView x:Name="treeviewtest" Width="400" HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" SelectedItemChanged="treeviewtest_SelectedItemChanged">
+            <TreeView x:Name="treeviewtest" Width="200" HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" SelectedItemChanged="treeviewtest_SelectedItemChanged">
                 <TreeView.Resources>
                     <ContextMenu x:Key ="SolutionContext"  StaysOpen="true">
                         <MenuItem Header="Add..."></MenuItem>
@@ -110,8 +116,7 @@
                     </ContextMenu>
                 </TreeView.Resources>
             </TreeView>
-            <DataGrid x:Name="Datagridio" Height="400" Width="600" Margin="434,0,255.6,334.4" />
-            <ListView x:Name="ConsoleOutput" Height="83" BorderBrush="Transparent" Width="306" Opacity="0.8" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" Margin="0,10,0,0" Foreground="#FF505050" FontFamily="Segoe UI Light"></ListView>
+            <DataGrid x:Name="Datagridio" Height="400" Width="800" VerticalAlignment="Top" />
         </Grid>
     </Grid>
 
