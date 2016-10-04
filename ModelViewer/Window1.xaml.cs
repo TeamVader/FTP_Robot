@@ -335,8 +335,6 @@ namespace StaubliEasyFTPClient
 
             try
             {
-
-
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
                 string filepath = path+ @"\GRASS_4_Vision.dtx";
