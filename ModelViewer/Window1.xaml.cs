@@ -163,8 +163,8 @@ namespace StaubliEasyFTPClient
             if (connected)
             {
                 treeviewtest.Items.Clear();
-                treeviewtest.Items.Add(CreateDirectoryNode(@"ftp://" + ip_ftp + @"/", "root"));
-                open_xml_from_ftp(@"usr/usrapp/GRASS_4_Vision/GRASS_4_Vision.dtx", ftpClient);
+                treeviewtest.Items.Add(CreateDirectoryNode(@"ftp://" + ip_ftp + @"/", "/usr"));
+                open_xml_from_ftp(@"/usr/usrapp/GRASS_4_Vision/GRASS_4_Vision.dtx", ftpClient);
 
                 //modbusClient = new ModbusClient(ip_modbus, 502);
                 //  modbusClient.Connect();
@@ -335,11 +335,15 @@ namespace StaubliEasyFTPClient
 
             try
             {
-                string path = @"C:\Users\alex\m\GRASS_4_Vision.dtx";
-                ftpclient.download(filename, path, ConsoleOutput);
+
+
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                string filepath = path+ @"\GRASS_4_Vision.dtx";
+                ftpclient.download(filename, filepath, ConsoleOutput);
                 XmlDocument xml = new XmlDocument();
                 string link = "";
-                xml.Load(path);
+                xml.Load(filepath);
                 XmlNodeList xnList = xml.SelectNodes("//*[local-name()='Datas']/*[local-name()='Data']");
                 List<Staubli_IO> io_list = new List<Staubli_IO>();
                 foreach (XmlNode xn in xnList)
